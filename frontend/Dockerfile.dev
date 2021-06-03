@@ -1,0 +1,9 @@
+FROM node:14
+
+WORKDIR /burner/src
+
+COPY package.json .
+
+RUN yarn install
+
+COPY . .
