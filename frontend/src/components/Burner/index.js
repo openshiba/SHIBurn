@@ -5,9 +5,16 @@ import { Input as NumericalInput } from "../NumericalInput";
 import { RowBetween, RowFixed, AutoRow } from "../Row";
 import { Column, ColumnCenter, AutoColumn } from "../Column";
 import { useShibContract } from "../../hooks/useContract";
+import { useActiveWeb3React } from "../../hooks/web3";
 
-export function Burner({ disabled = false, children, ...rest }) {
+export function Burner({
+  disabled = false,
+  children,
+  currentBalance,
+  ...rest
+}) {
   const contract = useShibContract();
+  const { address } = useActiveWeb3React();
   const [typedValue, setTypedValue] = useState("1000");
   const onUserInput = useCallback((typedValue) => {
     setTypedValue(typedValue);
@@ -33,11 +40,17 @@ export function Burner({ disabled = false, children, ...rest }) {
           <ButtonPrimary
             padding="8px"
             borderRadius="8px"
+            disabled={
+              currentBalance < typedValue ||
+              typedValue == "" ||
+              typedValue == "0"
+            }
             onClick={async () => {
-              let result = await contract.burn(typedValue, {
-                gasLimit: 21000,
-              });
-              console.log(result);
+              try {
+                await contract.burn(typedValue);
+              } catch (error) {
+                throw error;
+              }
             }}
           >
             BURN

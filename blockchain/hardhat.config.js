@@ -11,12 +11,9 @@ task("accounts", "Prints the list of accounts", async () => {
   }
 });
 
-
 // task action function receives the Hardhat Runtime Environment as second argument
 task("accountsWeb3", "Prints accounts", async (_, { web3 }) => {
-  
   console.log(await web3.eth.getAccounts());
-  
 });
 
 module.exports = {};
@@ -38,15 +35,37 @@ module.exports = {
       accounts: [
         {
           privateKey: process.env.ACCOUNT_1_PRIVATE_KEY,
-          balance: '10000000000000000000000',
+          balance: "10000000000000000000000",
         },
         {
           privateKey: process.env.ACCOUNT_2_PRIVATE_KEY,
-          balance: '10000000000000000000000',
-        }
-      ]
+          balance: "10000000000000000000000",
+        },
+      ],
+    },
+    ropsten: {
+      url: `https://eth-ropsten.alchemyapi.io/v2/${process.env.ROPSTEN_ALCHEMY_API_KEY}`,
+      accounts: [
+        process.env.ACCOUNT_1_PRIVATE_KEY,
+        process.env.ACCOUNT_2_PRIVATE_KEY,
+      ],
+      chainId: 3,
     },
   },
-  solidity: "0.5.0",
+  solidity: {
+    compilers: [
+      {
+        version: "0.5.0",
+      },
+      {
+        version: "0.7.0",
+      },
+    ],
+    paths: {
+      sources: "./contracts",
+      tests: "./test",
+      cache: "./cache",
+      artifacts: "./artifacts",
+    },
+  },
 };
-
